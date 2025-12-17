@@ -77,6 +77,7 @@ class HotKey:
     INFO = Keys.LEFT_CONTROL + Keys.ALT + "i"
     EXIT = Keys.ESCAPE
     CHOOSE_MODAL = Keys.F2
+    EDIT = Keys.F4
 
 def send_hot_key(key_combination):
     wait.until(getClientElement())
@@ -132,7 +133,10 @@ try:
     send_hot_key(HotKey.CHOOSE_MODAL)
     time.sleep(5)
     send_hot_key(HotKey.SAVE_FORM)
-    # goToPage("/PGDEV/Btk_ConfiguratorMainMenu/gtk-ru.bitec.app.btk.Btk_SettingGroup%23List/")
+    
+    time.sleep(5)
+    send_hot_key(HotKey.EXIT)
+    
     
     
 except Exception as e:
