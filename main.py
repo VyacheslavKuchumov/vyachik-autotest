@@ -5,58 +5,64 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
 
+BASE_URL = "http://localhost:8080"
+
+class ToolBarBtn:
+    EDIT_IN_LIST = "(//div[contains(@class, 'PToolButton')])[10]"
+    INSERT = "(//div[contains(@class, 'PToolButton')])[7]"
+
 # Setup
 driver = webdriver.Chrome()
+wait = WebDriverWait(driver, 20)
 # driver.maximize_window()  # Maximize window
+
+def get_client_element():
+    return EC.presence_of_element_located((By.ID, "ru.global-system.gl3.client"))
+    
+
+def login():
+    user_input = wait.until(
+        EC.element_to_be_clickable((By.NAME, "j_username"))
+    )
+    user_input.send_keys(Keys.RETURN)
+    wait.until(get_client_element())
+
+def goToPage(url):
+    driver.get(BASE_URL + url)
+    wait.until(get_client_element())
+    body = wait.until(
+        EC.element_to_be_clickable((By.TAG_NAME, "body"))
+    )
+    body.send_keys(Keys.RETURN)
+    wait.until(get_client_element())
+
+def click(button):
+    match button:
+        case ToolBarBtn.EDIT_IN_LIST:
+            btn = wait.until(
+                EC.element_to_be_clickable((By.XPATH, ToolBarBtn.EDIT_IN_LIST))
+            )
+            btn.click()
+        case ToolBarBtn.INSERT:
+            btn = wait.until(
+                EC.element_to_be_clickable((By.XPATH, ToolBarBtn.INSERT))
+            )
+            btn.click()
+        case _ :
+            pass
+        
 
 try:
     # Go to website
-    driver.get("http://localhost:8080")
-    
-    # Wait for search box to be visible (explicit wait)
-    wait = WebDriverWait(driver, 20)
+    driver.get(BASE_URL)
 
-    user_input = wait.until(
-        EC.presence_of_element_located((By.NAME, "j_username"))
-    )
-    user_input.send_keys(Keys.RETURN)
+    login()
+    
+    goToPage("/PGDEV/Btk_ConfiguratorMainMenu/gtk-ru.bitec.app.btk.Btk_SettingGroup%23List/")
 
-    all_menu_items = wait.until(
-        EC.presence_of_all_elements_located((By.CLASS_NAME, "gs-application-list-item__title"))
-    ) 
-    # Ищем элемент по тексту и кликаем на него
-    target_text = "Настройка системы"  # замените на нужный текст
-    found = False
-    
-    for item in all_menu_items:
-        print(item.text)
-        if item.text.strip() == target_text:
-            print(f"Найден элемент с текстом: {target_text}")
-            item.click()
-            found = True
-            break
-    
-    if not found:
-        print(f"Элемент с текстом '{target_text}' не найден")
+    click(ToolBarBtn.EDIT_IN_LIST)
+    click(ToolBarBtn.INSERT)
 
-    time.sleep(2)
-    
-    element = wait.until(
-        EC.element_to_be_clickable((By.TAG_NAME, "input"))
-    )
-    element.send_keys(Keys.LEFT_CONTROL + Keys.ALT + Keys.SHIFT + "e")
-    
-    time.sleep(2)
-
-    gid_field = wait.until(
-        EC.element_to_be_clickable((By.TAG_NAME, "input"))
-    )
-    gid_field.click()
-    gid_field.send_keys("16151/141260")
-    gid_field.click()
-    driver.implicitly_wait(5)
-    gid_field.send_keys(Keys.ENTER)
-    
     
     
 except Exception as e:
@@ -66,3 +72,5 @@ finally:
     # Keep browser open for a while
     input("Press Enter to close the browser...")
     driver.quit()
+
+
