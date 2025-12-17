@@ -127,8 +127,10 @@ try:
     send_hot_key(HotKey.CHOOSE_MODAL)
     send_hot_key(HotKey.CHOOSE_MODAL)
 
+    time.sleep(2)
+    
     send_hot_key(HotKey.CHOOSE_MODAL)
-
+    time.sleep(5)
     send_hot_key(HotKey.SAVE_FORM)
     # goToPage("/PGDEV/Btk_ConfiguratorMainMenu/gtk-ru.bitec.app.btk.Btk_SettingGroup%23List/")
     
