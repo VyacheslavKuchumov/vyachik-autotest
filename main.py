@@ -5,19 +5,16 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.remote.webelement import WebElement
 import time
-
 import random
 
-BASE_URL = "http://localhost:8080"
-
-
+from config import config
 
 # Setup
 driver = webdriver.Chrome()
 wait = WebDriverWait(driver, 20)
 # driver.maximize_window()  # Maximize window
 
-def getClientElement():
+def getMainFormElement():
     return EC.presence_of_element_located((By.ID, "ru.global-system.gl3.client"))
 
 def getModalWindow():
@@ -27,20 +24,17 @@ def generateCode():
     return f"{random.randint(100,999)}{random.randint(100,999)}{random.randint(100,999)}"
 
 def login():
-    user_input = wait.until(
-        EC.element_to_be_clickable((By.NAME, "j_username"))
-    )
-    user_input.send_keys(Keys.RETURN)
-    wait.until(getClientElement())
+    driver.get(f"{config.BASE_URL}/{config.USERNAME}:{config.PASSWORD}@{config.DB}/{config.APP_NAME}/{config.START_FORM}")
+    wait.until(getMainFormElement())
 
 def goToPage(url):
-    driver.get(BASE_URL + url)
-    wait.until(getClientElement())
+    driver.get(config.BASE_URL + url)
+    wait.until(getMainFormElement())
     body = wait.until(
         EC.element_to_be_clickable((By.TAG_NAME, "body"))
     )
     body.send_keys(Keys.RETURN)
-    wait.until(getClientElement())
+    wait.until(getMainFormElement())
 
 
 class ToolBarBtn:
@@ -77,7 +71,7 @@ class HotKey:
     EDIT = Keys.F4
 
 def send_hot_key(key_combination):
-    wait.until(getClientElement())
+    wait.until(getMainFormElement())
     body = wait.until(
         EC.element_to_be_clickable((By.TAG_NAME, "body"))
     )
@@ -85,22 +79,19 @@ def send_hot_key(key_combination):
     body.send_keys(key_combination)
 
 def enter_text(element: WebElement, text):
-    wait.until(getClientElement())
+    wait.until(getMainFormElement())
     element.click()
     element.send_keys(text)
 def clear_text(element: WebElement):
-    wait.until(getClientElement())
+    wait.until(getMainFormElement())
     element.click()
     element.send_keys(Keys.LEFT_CONTROL+ "a" + Keys.BACKSPACE)
         
 
 try:
-    # Go to website
-    driver.get(BASE_URL)
 
     login()
     
-    goToPage("/PGDEV/Btk_ConfiguratorMainMenu/gtk-ru.bitec.app.btk.Btk_SettingGroup%23List/")
 
     click(ToolBarBtn.INSERT)
 
