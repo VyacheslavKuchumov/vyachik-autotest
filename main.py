@@ -23,11 +23,8 @@ def getClientElement():
 def getModalWindow():
     return EC.presence_of_element_located((By.XPATH, "//div[contains(@class, 'gwindow-modal')]"))
 
-def generateObjectName():
-    return f"TEST_OBJECT_{random.randint(0,100)}{random.randint(0,100)}{random.randint(0,100)}"
-
-def generateReleaseName():
-    return f"TEST_RELEASE_{random.randint(0,100)}{random.randint(0,100)}{random.randint(0,100)}"
+def generateCode():
+    return f"{random.randint(100,999)}{random.randint(100,999)}{random.randint(100,999)}"
 
 def login():
     user_input = wait.until(
@@ -110,7 +107,7 @@ try:
     system_name_field = wait.until(
         EC.element_to_be_clickable((By.XPATH, "(//input[@class='D56M6YB-t-c D56M6YB-t-h'])[3]"))
     )
-    enter_text(system_name_field, generateObjectName())
+    enter_text(system_name_field, "TEST_OBJECT_" + generateCode())
     send_hot_key(HotKey.SAVE_FORM)
 
     wait.until(getModalWindow())
@@ -122,7 +119,7 @@ try:
     )
 
     clear_text(release_name_field)
-    enter_text(release_name_field, generateReleaseName())
+    enter_text(release_name_field, "TEST_RELEASE_" + generateCode())
     send_hot_key(Keys.ENTER)
 
     send_hot_key(HotKey.CHOOSE_MODAL)
@@ -133,9 +130,6 @@ try:
     send_hot_key(HotKey.CHOOSE_MODAL)
     time.sleep(5)
     send_hot_key(HotKey.SAVE_FORM)
-    
-    time.sleep(5)
-    send_hot_key(HotKey.EXIT)
     
     
     
