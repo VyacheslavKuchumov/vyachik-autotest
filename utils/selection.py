@@ -64,6 +64,38 @@ class Selection:
         except TimeoutException:
             print("Timeout waiting for JEXL completion")
             raise
+
+    def execute_operation(self, operation_name):
+        """
+        Execute an operation on a web element
+        
+        Args:
+            operation_name: The name of the operation to execute
+        """
+        try:
+            # Execute the async JavaScript
+            async_script = """
+            var callback = arguments[arguments.length - 1];
+            callback(arguments[0].executeOperation(arguments[1]));
+            """
+            
+            # Execute the async script
+            result = self.driver.execute_async_script(
+                async_script, 
+                self.selection, 
+                operation_name
+            )
+            
+            return result
+            
+        except JavascriptException as ex:
+            # Handle JavaScript exceptions
+            # In Java, this checks server settings, but in Python we'll just raise an exception
+            # You might want to add your own logic here based on your application's settings
+            print(f"Javascript exception during operation execution: {ex}")
+            # You could add logic here to check if operation execution is enabled
+            # For now, we'll just re-raise the exception
+            raise
     
 
 
