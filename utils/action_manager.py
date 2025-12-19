@@ -6,7 +6,7 @@ from selenium.webdriver.remote.webelement import WebElement
 from utils.selection import Selection
 from utils.element_finder import ElementFinder
 
-from config import config
+from utils.config import config
 
 class ActionManager:
     def __init__(self, driver: WebDriver):
