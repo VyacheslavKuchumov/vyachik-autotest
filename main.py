@@ -104,7 +104,6 @@ try:
     
     mainSelection.execute_jexl("Btk_SettingGroupAvi.list().newForm().open()")
 
-    time.sleep(2)
 
     settingGroupFormElement = elementFinder.getFormByName(mainFormElement, "gtk-ru.bitec.app.btk.Btk_SettingGroup#List")
     settingGroupSelectionElement = elementFinder.getSelectionElement(settingGroupFormElement)
