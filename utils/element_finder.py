@@ -18,6 +18,11 @@ class ElementFinder:
             EC.presence_of_element_located((By.XPATH, self.APPLICATION))
         )
     
+    def waitForFormPresence(self, form_name: str):
+        self.wait.until(
+            EC.presence_of_element_located((By.XPATH, f"//div[@data-form.name='{form_name}']"))
+        )
+    
     def getMainFormElement(self) -> WebElement:
         self.waitForApplicationPresence()
         return self.driver.find_element(By.XPATH, self.MAIN_FORM)
@@ -25,3 +30,8 @@ class ElementFinder:
     def getSelectionElement(self, main_form: WebElement) -> WebElement:
         self.waitForApplicationPresence()
         return main_form.find_element(By.XPATH, self.SELECTION)
+    
+    def getFormByName(self, parent_form_element: WebElement, form_name: str) -> WebElement:
+        self.waitForApplicationPresence()
+        self.waitForFormPresence(form_name)
+        return parent_form_element.find_element(By.XPATH, f"//div[@data-form.name='{form_name}']")

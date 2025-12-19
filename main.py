@@ -7,14 +7,18 @@ from selenium.webdriver.remote.webelement import WebElement
 import time
 import random
 
-from config import config
+from utils.config import config
+from utils.action_manager import ActionManager
+from utils.selection import Selection
+from utils.element_finder import ElementFinder
+
 
 # Setup
 driver = webdriver.Chrome()
 wait = WebDriverWait(driver, 20)
 # driver.maximize_window()  # Maximize window
 
-def getMainFormElement():
+def checkApplication():
     return EC.presence_of_element_located((By.ID, "ru.global-system.gl3.client"))
 
 def getModalWindow():
@@ -25,16 +29,16 @@ def generateCode():
 
 def login():
     driver.get(f"{config.BASE_URL}/{config.USER}:{config.PASSWORD}@{config.DB}/{config.APP_NAME}/{config.START_FORM}")
-    wait.until(getMainFormElement())
+    wait.until(checkApplication())
 
 def goToPage(url):
     driver.get(config.BASE_URL + url)
-    wait.until(getMainFormElement())
+    wait.until(checkApplication())
     body = wait.until(
         EC.element_to_be_clickable((By.TAG_NAME, "body"))
     )
     body.send_keys(Keys.RETURN)
-    wait.until(getMainFormElement())
+    wait.until(checkApplication())
 
 
 class ToolBarBtn:
@@ -71,7 +75,7 @@ class HotKey:
     EDIT = Keys.F4
 
 def send_hot_key(key_combination):
-    wait.until(getMainFormElement())
+    wait.until(checkApplication())
     body = wait.until(
         EC.element_to_be_clickable((By.TAG_NAME, "body"))
     )
@@ -79,58 +83,61 @@ def send_hot_key(key_combination):
     body.send_keys(key_combination)
 
 def enter_text(element: WebElement, text):
-    wait.until(getMainFormElement())
+    wait.until(checkApplication())
     element.click()
     element.send_keys(text)
 def clear_text(element: WebElement):
-    wait.until(getMainFormElement())
+    wait.until(checkApplication())
     element.click()
     element.send_keys(Keys.LEFT_CONTROL+ "a" + Keys.BACKSPACE)
         
 
 try:
 
-    login()
-
-    from utils.selection import Selection
-    from utils.element_finder import ElementFinder
+    actionManager = ActionManager(driver)
+    actionManager.login()
 
     elementFinder = ElementFinder(driver)
-    mainForm = elementFinder.getMainFormElement()
-    mainSelection = elementFinder.getMainSelectionElement(mainForm)
-    selection = Selection(driver, mainForm, mainSelection)
-
-    selection.execute_jexl("Btk_SettingGroupAvi.list().newForm().open()")
+    mainFormElement = elementFinder.getMainFormElement()
+    mainSelectionElement = elementFinder.getSelectionElement(mainFormElement)
+    mainSelection = Selection(driver, mainFormElement, mainSelectionElement)
     
+    mainSelection.execute_jexl("Btk_SettingGroupAvi.list().newForm().open()")
 
-    # click(ToolBarBtn.INSERT)
+    time.sleep(2)
 
-    # system_name_field = wait.until(
-    #     EC.element_to_be_clickable((By.XPATH, "(//input[@class='D56M6YB-t-c D56M6YB-t-h'])[3]"))
-    # )
-    # enter_text(system_name_field, "TEST_OBJECT_" + generateCode())
-    # send_hot_key(HotKey.SAVE_FORM)
+    settingGroupFormElement = elementFinder.getFormByName(mainFormElement, "gtk-ru.bitec.app.btk.Btk_SettingGroup#List")
+    settingGroupSelectionElement = elementFinder.getSelectionElement(settingGroupFormElement)
+    settingGroupSelection = Selection(driver, settingGroupFormElement, settingGroupSelectionElement)
 
-    # wait.until(getModalWindow())
+    click(ToolBarBtn.INSERT)
 
-    # click(ToolBarBtn.CREATE_RELEASE)
+    system_name_field = wait.until(
+        EC.element_to_be_clickable((By.XPATH, "(//input[@class='D56M6YB-t-c D56M6YB-t-h'])[3]"))
+    )
+    enter_text(system_name_field, "TEST_OBJECT_" + generateCode())
+    send_hot_key(HotKey.SAVE_FORM)
 
-    # release_name_field = wait.until(
-    #     EC.element_to_be_clickable((By.XPATH, "(//input[contains(@value, 'Перенос конфигурации')])"))
-    # )
+    wait.until(getModalWindow())
 
-    # clear_text(release_name_field)
-    # enter_text(release_name_field, "TEST_RELEASE_" + generateCode())
-    # send_hot_key(Keys.ENTER)
+    click(ToolBarBtn.CREATE_RELEASE)
 
-    # send_hot_key(HotKey.CHOOSE_MODAL)
-    # send_hot_key(HotKey.CHOOSE_MODAL)
+    release_name_field = wait.until(
+        EC.element_to_be_clickable((By.XPATH, "(//input[contains(@value, 'Перенос конфигурации')])"))
+    )
 
-    # time.sleep(2)
+    clear_text(release_name_field)
+    enter_text(release_name_field, "TEST_RELEASE_" + generateCode())
+    send_hot_key(Keys.ENTER)
+
+    send_hot_key(HotKey.CHOOSE_MODAL)
+    send_hot_key(HotKey.CHOOSE_MODAL)
+
+    time.sleep(2)
     
-    # send_hot_key(HotKey.CHOOSE_MODAL)
-    # time.sleep(5)
-    # send_hot_key(HotKey.SAVE_FORM)
+    send_hot_key(HotKey.CHOOSE_MODAL)
+    time.sleep(5)
+    send_hot_key(HotKey.SAVE_FORM)
     
     
     
@@ -140,6 +147,9 @@ except Exception as e:
 finally:
     # Keep browser open for a while
     input("Press Enter to close the browser...")
+    actionManager = ActionManager(driver)
+    actionManager.logout()
+    time.sleep(3)
     driver.quit()
 
 

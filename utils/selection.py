@@ -6,13 +6,13 @@ from selenium.webdriver.remote.webelement import WebElement
 import time
 
 class Selection:
-    def __init__(self, driver: WebDriver, main_form: WebElement, selection: WebElement):
+    def __init__(self, driver: WebDriver, main_form_element: WebElement, selection_element: WebElement):
         self.driver = driver
-        self.main_form = main_form
-        self.selection = selection
+        self.main_form_element = main_form_element
+        self.selection = selection_element
         
         
-    def execute_jexl(self, jexl_script, timeout=30, dom_stability_delay=2):
+    def execute_jexl(self, jexl_script: str, timeout=30, dom_stability_delay=2):
         """
         Execute JEXL script on a web element and wait for conditions
         
@@ -36,7 +36,7 @@ class Selection:
             )
             
             # Wait for JEXL execution to complete
-            if self.main_form:
+            if self.main_form_element:
                 # Wait for the data-selection-jexl-inprogress attribute to be false
                 self._wait_for_jexl_completion(timeout)
             
@@ -58,14 +58,14 @@ class Selection:
         # Wait until the attribute is set to false or not present
         try:
             wait.until(
-                lambda driver: self.main_form.get_attribute("data-selection-jexl-inprogress") == "false" 
-                or not self.main_form.get_attribute("data-selection-jexl-inprogress")
+                lambda driver: self.main_form_element.get_attribute("data-selection-jexl-inprogress") == "false" 
+                or not self.main_form_element.get_attribute("data-selection-jexl-inprogress")
             )
         except TimeoutException:
             print("Timeout waiting for JEXL completion")
             raise
 
-    def execute_operation(self, operation_name):
+    def execute_operation(self, operation_name: str):
         """
         Execute an operation on a web element
         
