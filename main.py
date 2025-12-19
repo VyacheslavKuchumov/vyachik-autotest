@@ -92,8 +92,8 @@ try:
     mainSelection.execute_jexl("Btk_SettingGroupAvi.list().newForm().open()")
 
 
-    settingGroupFormElement = elementFinder.getFormByName(mainFormElement, "gtk-ru.bitec.app.btk.Btk_SettingGroup#List")
-    insertOperElement = elementFinder.getOperationInFormByName(settingGroupFormElement, "INSERT")
+    settingGroupListElement = elementFinder.getFormByName(mainFormElement, "gtk-ru.bitec.app.btk.Btk_SettingGroup#List")
+    insertOperElement = elementFinder.getOperationInFormByName(settingGroupListElement, "INSERT")
     insertOperElement.click()
 
 
