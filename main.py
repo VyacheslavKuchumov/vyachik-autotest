@@ -27,19 +27,6 @@ def getModalWindow():
 def generateCode():
     return f"{random.randint(100,999)}{random.randint(100,999)}{random.randint(100,999)}"
 
-def login():
-    driver.get(f"{config.BASE_URL}/{config.USER}:{config.PASSWORD}@{config.DB}/{config.APP_NAME}/{config.START_FORM}")
-    wait.until(checkApplication())
-
-def goToPage(url):
-    driver.get(config.BASE_URL + url)
-    wait.until(checkApplication())
-    body = wait.until(
-        EC.element_to_be_clickable((By.TAG_NAME, "body"))
-    )
-    body.send_keys(Keys.RETURN)
-    wait.until(checkApplication())
-
 
 class ToolBarBtn:
     EDIT_IN_LIST = "(//div[contains(@class, 'PToolButton')])[10]"
@@ -106,15 +93,14 @@ try:
 
 
     settingGroupFormElement = elementFinder.getFormByName(mainFormElement, "gtk-ru.bitec.app.btk.Btk_SettingGroup#List")
-    settingGroupSelectionElement = elementFinder.getSelectionElement(settingGroupFormElement)
-    settingGroupSelection = Selection(driver, settingGroupFormElement, settingGroupSelectionElement)
+    insertOperElement = elementFinder.getOperationInFormByName(settingGroupFormElement, "INSERT")
+    insertOperElement.click()
 
-    click(ToolBarBtn.INSERT)
 
-    system_name_field = wait.until(
-        EC.element_to_be_clickable((By.XPATH, "(//input[@class='D56M6YB-t-c D56M6YB-t-h'])[3]"))
-    )
-    enter_text(system_name_field, "TEST_OBJECT_" + generateCode())
+    sSysNameTextBox = elementFinder.getTextBoxInFormByName(mainFormElement, "SSYSTEMNAME")
+    sSysNameTextBox.click()
+    sSysNameTextBox.send_keys("TEST_OBJECT_" + generateCode())
+
     send_hot_key(HotKey.SAVE_FORM)
 
     wait.until(getModalWindow())

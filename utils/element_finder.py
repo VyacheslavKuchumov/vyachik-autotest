@@ -33,5 +33,20 @@ class ElementFinder:
     
     def getFormByName(self, parent_form_element: WebElement, form_name: str) -> WebElement:
         self.waitForApplicationPresence()
-        self.waitForFormPresence(form_name)
+        # self.waitForFormPresence(form_name)
         return parent_form_element.find_element(By.XPATH, f"//div[@data-form.name='{form_name}']")
+    
+    def getOperationInFormByName(self, parent_form_element: WebElement, operation_name: str) -> WebElement:
+        self.waitForApplicationPresence()
+        self.wait.until(
+            EC.presence_of_element_located((By.XPATH, f"//div[@data-operation.name='{operation_name}']"))
+        )
+        return parent_form_element.find_element(By.XPATH, f"//div[@data-operation.name='{operation_name}']")
+    
+    def getTextBoxInFormByName(self, parent_form_element: WebElement, attribute_name: str):
+        self.waitForApplicationPresence()
+        self.wait.until(
+            EC.presence_of_element_located((By.XPATH, f"//div[@data-attribute.name='{attribute_name}']"))
+        )
+        div = parent_form_element.find_element(By.XPATH, f"//div[@data-attribute.name='{attribute_name}']")
+        return div.find_element(By.TAG_NAME, "input")
