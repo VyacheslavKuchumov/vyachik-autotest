@@ -1,5 +1,5 @@
 import pytest
-from config import config
+from utils.config import config
 
 class TestLogin:
     pass

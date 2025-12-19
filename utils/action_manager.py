@@ -19,7 +19,7 @@ class ActionManager:
     
     def logout(self):
         mainForm = self.elementFinder.getMainFormElement()
-        mainSelection = self.elementFinder.getMainSelectionElement(mainForm)
+        mainSelection = self.elementFinder.getSelectionElement(mainForm)
         selection = Selection(self.driver, mainForm, mainSelection)
         selection.execute_operation("MM_FILE_EXIT")
         

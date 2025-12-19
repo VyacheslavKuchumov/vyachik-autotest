@@ -7,7 +7,7 @@ from selenium.webdriver.remote.webelement import WebElement
 class ElementFinder:
     APPLICATION = "//div[@data-node.class='PApplication']"
     MAIN_FORM = "//div[@data-form.opentype='MAIN_FORM']"
-    MAIN_SELECTION = "//div[@data-node.class='PSelection']"
+    SELECTION = "//div[@data-node.class='PSelection']"
 
     def __init__(self, driver: WebDriver):
         self.driver = driver
@@ -22,6 +22,6 @@ class ElementFinder:
         self.waitForApplicationPresence()
         return self.driver.find_element(By.XPATH, self.MAIN_FORM)
     
-    def getMainSelectionElement(self, main_form: WebElement) -> WebElement:
+    def getSelectionElement(self, main_form: WebElement) -> WebElement:
         self.waitForApplicationPresence()
-        return main_form.find_element(By.XPATH, self.MAIN_SELECTION)
+        return main_form.find_element(By.XPATH, self.SELECTION)
