@@ -5,7 +5,7 @@ load_dotenv()
 
 class Config:
     BASE_URL =  os.getenv('BASE_URL', "http://localhost:8080")
-    USERNAME = os.getenv('USERNAME', "admin")
+    USER = os.getenv('USER', "admin")
     PASSWORD = os.getenv('PASSWORD', "admin")
     DB = os.getenv('DB', "PGDEV")
     APP_NAME = os.getenv('APP_NAME', "Btk_ConfiguratorMainMenu")

@@ -24,7 +24,7 @@ def generateCode():
     return f"{random.randint(100,999)}{random.randint(100,999)}{random.randint(100,999)}"
 
 def login():
-    driver.get(f"{config.BASE_URL}/{config.USERNAME}:{config.PASSWORD}@{config.DB}/{config.APP_NAME}/{config.START_FORM}")
+    driver.get(f"{config.BASE_URL}/{config.USER}:{config.PASSWORD}@{config.DB}/{config.APP_NAME}/{config.START_FORM}")
     wait.until(getMainFormElement())
 
 def goToPage(url):
@@ -91,36 +91,46 @@ def clear_text(element: WebElement):
 try:
 
     login()
+
+    from utils.selection import Selection
+    from utils.element_finder import ElementFinder
+
+    elementFinder = ElementFinder(driver)
+    mainForm = elementFinder.getMainFormElement()
+    mainSelection = elementFinder.getMainSelectionElement(mainForm)
+    selection = Selection(driver, mainForm, mainSelection)
+
+    selection.execute_jexl("Btk_SettingGroupAvi.list().newForm().open()")
     
 
-    click(ToolBarBtn.INSERT)
+    # click(ToolBarBtn.INSERT)
 
-    system_name_field = wait.until(
-        EC.element_to_be_clickable((By.XPATH, "(//input[@class='D56M6YB-t-c D56M6YB-t-h'])[3]"))
-    )
-    enter_text(system_name_field, "TEST_OBJECT_" + generateCode())
-    send_hot_key(HotKey.SAVE_FORM)
+    # system_name_field = wait.until(
+    #     EC.element_to_be_clickable((By.XPATH, "(//input[@class='D56M6YB-t-c D56M6YB-t-h'])[3]"))
+    # )
+    # enter_text(system_name_field, "TEST_OBJECT_" + generateCode())
+    # send_hot_key(HotKey.SAVE_FORM)
 
-    wait.until(getModalWindow())
+    # wait.until(getModalWindow())
 
-    click(ToolBarBtn.CREATE_RELEASE)
+    # click(ToolBarBtn.CREATE_RELEASE)
 
-    release_name_field = wait.until(
-        EC.element_to_be_clickable((By.XPATH, "(//input[contains(@value, 'Перенос конфигурации')])"))
-    )
+    # release_name_field = wait.until(
+    #     EC.element_to_be_clickable((By.XPATH, "(//input[contains(@value, 'Перенос конфигурации')])"))
+    # )
 
-    clear_text(release_name_field)
-    enter_text(release_name_field, "TEST_RELEASE_" + generateCode())
-    send_hot_key(Keys.ENTER)
+    # clear_text(release_name_field)
+    # enter_text(release_name_field, "TEST_RELEASE_" + generateCode())
+    # send_hot_key(Keys.ENTER)
 
-    send_hot_key(HotKey.CHOOSE_MODAL)
-    send_hot_key(HotKey.CHOOSE_MODAL)
+    # send_hot_key(HotKey.CHOOSE_MODAL)
+    # send_hot_key(HotKey.CHOOSE_MODAL)
 
-    time.sleep(2)
+    # time.sleep(2)
     
-    send_hot_key(HotKey.CHOOSE_MODAL)
-    time.sleep(5)
-    send_hot_key(HotKey.SAVE_FORM)
+    # send_hot_key(HotKey.CHOOSE_MODAL)
+    # time.sleep(5)
+    # send_hot_key(HotKey.SAVE_FORM)
     
     
     
